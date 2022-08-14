@@ -1,6 +1,5 @@
 import { compare, hash } from 'bcrypt';
 import { injectable } from 'inversify';
-import { LeanDocument } from 'mongoose';
 import { generate } from 'shortid';
 import { createAccessToken, createRefreshToken, verifyRefreshToken } from '../helpers/token.helper';
 import { IUser, User } from '../models/user.model';
@@ -87,6 +86,6 @@ export class AuthService {
   }
 
   private updateUser(userId: string, updatedUser: Partial<IUser>) {
-    return User.updateOne({ userId }, updatedUser);
+    return User.updateOne({ userId }, updatedUser).exec();
   }
 }

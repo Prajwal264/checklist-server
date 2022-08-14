@@ -83,7 +83,7 @@ class Server {
     app.use(express.json());
     app.use(cors({
       credentials: true,
-      origin: 'http://localhost:3001',
+      origin: 'http://localhost:8080',
     }));
     const server = new InversifyExpressServer(container, null, { rootPath: '/api' }, app);
     this.app = server.build();

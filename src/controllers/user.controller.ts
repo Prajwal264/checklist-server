@@ -48,7 +48,10 @@ export class AuthController implements interfaces.Controller {
         email,
         password,
       });
-      res.status(200).json(verifiedResponse);
+      res.cookie('accesssToken', verifiedResponse.accessToken, {
+        httpOnly: true,
+      });
+      res.status(200).json({ success: true });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -68,7 +71,11 @@ export class AuthController implements interfaces.Controller {
         throw new Error('Invalid access token');
       }
       const accessToken = await this.authService.refresh(decodedToken.userId, refreshToken);
-      res.status(200).json({ accessToken });
+
+      res.cookie('accesssToken', accessToken, {
+        httpOnly: true,
+      });
+      res.status(200).json({ success: true });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
