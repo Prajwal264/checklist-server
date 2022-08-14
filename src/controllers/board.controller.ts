@@ -22,10 +22,10 @@ export class BoardController implements interfaces.Controller {
         throw Error('Name is mandatory');
       }
       const { userId } = req.user;
-      await this.boardService.create(userId, {
+      const board = await this.boardService.create(userId, {
         name,
       });
-      res.status(201).json({ success: true });
+      res.status(201).json({ board });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
