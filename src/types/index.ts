@@ -1,6 +1,6 @@
 const TYPES = {
   AuthService: Symbol('AuthService'),
-  TaskService: Symbol('TaskService'),
+  BoardService: Symbol('BoardService'),
 };
 
 export default TYPES;
