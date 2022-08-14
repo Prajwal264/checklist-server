@@ -16,8 +16,11 @@ export class AuthController implements interfaces.Controller {
 
   @httpPost('/register')
   public async signup(@request() req: Request, @response() res: Response) {
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
     try {
+      if (!username) {
+        throw Error('Name is mandatory');
+      }
       if (!email) {
         throw Error('Email is mandatory');
       }
@@ -25,6 +28,7 @@ export class AuthController implements interfaces.Controller {
         throw Error('Password is mandatory');
       }
       await this.authService.create({
+        username,
         email,
         password,
       });
