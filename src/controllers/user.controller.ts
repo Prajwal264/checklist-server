@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
-  interfaces, controller, request, response, httpPost,
+  interfaces, controller, request, response, httpPost, httpGet,
 } from 'inversify-express-utils';
 import { decode } from 'jsonwebtoken';
 import { RequestWithContext } from '../types/request.type';
@@ -61,9 +61,8 @@ export class AuthController implements interfaces.Controller {
     }
   }
 
-  @httpPost('/refreshtoken')
+  @httpGet('/refreshtoken')
   public async refreshToken(@request() req: RequestWithContext, @response() res: Response) {
-    const { refreshToken } = req.body;
     const bearer = req.headers.authorization;
     try {
       if (!bearer) {
@@ -74,7 +73,7 @@ export class AuthController implements interfaces.Controller {
       if (!decodedToken) {
         throw new Error('Invalid access token');
       }
-      const accessToken = await this.authService.refresh(decodedToken.userId, refreshToken);
+      const accessToken = await this.authService.refresh(decodedToken.userId);
 
       res.cookie('accesssToken', accessToken, {
         httpOnly: true,

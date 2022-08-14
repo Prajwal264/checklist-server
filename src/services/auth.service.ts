@@ -81,8 +81,12 @@ export class AuthService {
     };
   }
 
-  public async refresh(userId: string, refreshToken: string) {
-    const validToken = verifyRefreshToken(refreshToken);
+  public async refresh(userId: string) {
+    const userInfo = await this.getById(userId);
+    if (!userInfo?.refreshToken) {
+      return null;
+    }
+    const validToken = verifyRefreshToken(userInfo?.refreshToken);
     if (!validToken) {
       return null;
     }
