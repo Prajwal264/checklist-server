@@ -1,7 +1,7 @@
 {
-  "name": "node-inversify-mongoose-typescript-starter",
+  "name": "checklist-server",
   "version": "1.0.0",
-  "description": "A node.js project starter with Inversify express, mongoose, typescript, es-lint and basic auth flow.",
+  "description": "a daily task management project build with node.js",
   "author": "Prajwal264",
   "main": "index.js",
   "license": "MIT",
