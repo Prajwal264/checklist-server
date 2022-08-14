@@ -1,5 +1,6 @@
 import { compare, hash } from 'bcrypt';
 import { injectable } from 'inversify';
+import { LeanDocument } from 'mongoose';
 import { generate } from 'shortid';
 import { createAccessToken, createRefreshToken, verifyRefreshToken } from '../helpers/token.helper';
 import { IUser, User } from '../models/user.model';
@@ -64,13 +65,16 @@ export class AuthService {
     if (!validUser) {
       throw new Error('Invalid Password');
     }
+    const accessToken = createAccessToken({
+      userId: user.userId,
+    }, '1h');
+    const refreshToken = createRefreshToken({
+      userId: user.userId,
+    }, '7d');
+    this.updateUser(user.userId, { refreshToken });
     return {
-      acesssToken: createAccessToken({
-        userId: user.userId,
-      }, '1h'),
-      refreshToken: createRefreshToken({
-        userId: user.userId,
-      }, '7d'),
+      accessToken,
+      refreshToken,
     };
   }
 
@@ -80,5 +84,9 @@ export class AuthService {
       return null;
     }
     return createAccessToken({ userId }, '1h');
+  }
+
+  private updateUser(userId: string, updatedUser: Partial<IUser>) {
+    return User.updateOne({ userId }, updatedUser);
   }
 }
