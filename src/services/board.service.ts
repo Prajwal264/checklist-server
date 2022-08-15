@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
+import { FilterQuery } from 'mongoose';
 import { generate } from 'shortid';
-import { Board } from '../models/board.model';
+import { Board, IBoard } from '../models/board.model';
 
 @injectable()
 export class BoardService {
@@ -13,5 +14,9 @@ export class BoardService {
       boardId,
       userId,
     }).save();
+  }
+
+  fetchAll(findQuery: FilterQuery<IBoard>) {
+    return Board.find(findQuery);
   }
 }

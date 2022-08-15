@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { inject } from 'inversify';
 import {
-  controller, httpPost, interfaces, request, response,
+  controller, httpGet, httpPost, interfaces, request, response,
 } from 'inversify-express-utils';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import TYPES from '../types';
@@ -12,9 +12,20 @@ import { RequestWithContext } from '../types/request.type';
 export class BoardController implements interfaces.Controller {
   constructor(
     @inject(TYPES.BoardService) readonly boardService: BoardService,
-  ) {}
+  ) { }
 
-    @httpPost('/')
+  @httpGet('/')
+  async fetchAll(@request() req: RequestWithContext, @response() res: Response) {
+    try {
+      const { userId } = req.user;
+      const boards = await this.boardService.fetchAll({ userId });
+      res.status(200).json(boards);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  @httpPost('/')
   async create(@request() req: RequestWithContext, @response() res: Response) {
     const { name } = req.body;
     try {
@@ -25,7 +36,7 @@ export class BoardController implements interfaces.Controller {
       const board = await this.boardService.create(userId, {
         name,
       });
-      res.status(201).json({ board });
+      res.status(201).json(board);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

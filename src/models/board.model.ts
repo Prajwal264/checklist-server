@@ -11,7 +11,7 @@ const usersSchema = new Schema({
     type: 'String', required: true,
   },
   userId: {
-    type: 'String', required: true, unique: true, index: true,
+    type: 'String', required: true,
   },
   boardId: {
     type: 'String', required: true, unique: true, index: true,
