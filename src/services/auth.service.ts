@@ -60,7 +60,7 @@ export class AuthService {
     email: string,
     password: string,
   }) {
-    const user = await this.getByEmail(email);
+    const user = await User.findOne<IUser>({ email }).select('+password');
     if (!user) {
       throw new Error('User not found');
     }
