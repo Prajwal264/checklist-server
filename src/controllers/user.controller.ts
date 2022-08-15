@@ -8,6 +8,7 @@ import { BoardService } from '../services/board.service';
 import { RequestWithContext } from '../types/request.type';
 import { AuthService } from '../services/auth.service';
 import TYPES from '../types';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 @controller('/auth')
 export class AuthController implements interfaces.Controller {
@@ -15,6 +16,11 @@ export class AuthController implements interfaces.Controller {
     @inject(TYPES.AuthService) readonly authService: AuthService,
     @inject(TYPES.BoardService) readonly boardService: BoardService,
   ) { }
+
+  @httpGet('/me', authMiddleware())
+  public async me(@request() req: RequestWithContext, @response() res: Response) {
+    return res.send(req.user);
+  }
 
   @httpPost('/register')
   public async signup(@request() req: Request, @response() res: Response) {

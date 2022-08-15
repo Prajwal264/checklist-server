@@ -19,10 +19,10 @@ const usersSchema = new Schema({
     type: 'String', required: true, unique: true, index: true,
   },
   password: {
-    type: 'String', required: true,
+    type: 'String', required: true, select: false,
   },
   refreshToken: {
-    type: 'String',
+    type: 'String', select: false,
   },
 }, { timestamps: true });
 
