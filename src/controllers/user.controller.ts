@@ -70,7 +70,7 @@ export class AuthController implements interfaces.Controller {
     }
   }
 
-  @httpGet('/refreshtoken')
+  @httpPost('/refreshtoken')
   public async refreshToken(@request() req: RequestWithContext, @response() res: Response) {
     const bearer = req.headers.authorization;
     try {
@@ -85,9 +85,9 @@ export class AuthController implements interfaces.Controller {
       const accessToken = await this.authService.refresh(decodedToken.userId);
 
       res.cookie('accessToken', accessToken);
-      res.status(200).json({ success: true });
+      res.status(200).send({ success: true });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).send({ error: error.message });
     }
   }
 }

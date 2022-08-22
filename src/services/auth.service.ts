@@ -70,7 +70,7 @@ export class AuthService {
     }
     const accessToken = createAccessToken({
       userId: user.userId,
-    }, '1h');
+    }, '10s');
     const refreshToken = createRefreshToken({
       userId: user.userId,
     }, '7d');
@@ -82,7 +82,7 @@ export class AuthService {
   }
 
   public async refresh(userId: string) {
-    const userInfo = await this.getById(userId);
+    const userInfo = await User.findOne({ userId }).select('+refreshToken');
     if (!userInfo?.refreshToken) {
       return null;
     }
@@ -90,7 +90,7 @@ export class AuthService {
     if (!validToken) {
       return null;
     }
-    return createAccessToken({ userId }, '1h');
+    return createAccessToken({ userId }, '10s');
   }
 
   private updateUser(userId: string, updatedUser: Partial<IUser>) {

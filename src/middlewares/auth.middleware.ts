@@ -21,7 +21,7 @@ function authMiddlewareFactory() {
         verifyAccessToken(accessToken);
       } catch (e) {
         res.status(403).json({
-          status: 'Unauthorized',
+          status: 'Token Expired',
         }).end();
         return;
       }
