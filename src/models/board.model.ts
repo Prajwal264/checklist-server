@@ -6,7 +6,7 @@ export interface IBoard {
   boardId: string;
 }
 
-const usersSchema = new Schema({
+const boardsSchema = new Schema({
   name: {
     type: 'String', required: true,
   },
@@ -18,4 +18,4 @@ const usersSchema = new Schema({
   },
 }, { timestamps: true });
 
-export const Board = model('Board', usersSchema);
+export const Board = model('Board', boardsSchema);
