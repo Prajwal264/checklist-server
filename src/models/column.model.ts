@@ -5,7 +5,7 @@ export interface IColumn {
   description?: string;
   boardId: string;
   columnId: string;
-  children: any[], // why am i jugading
+  children: [], // why am i jugading
 }
 
 const columnsSchema = new Schema({
@@ -21,9 +21,7 @@ const columnsSchema = new Schema({
   columnId: {
     type: 'String', required: true, unique: true, index: true,
   },
-  children: {
-    type: 'Array', default: [],
-  },
+  children: [],
 }, { timestamps: true });
 
 export const Column = model('Column', columnsSchema);

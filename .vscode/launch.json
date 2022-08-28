@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "ts-node-dev",
+      "restart": true,
+      "request": "launch",
+      "runtimeExecutable": "tsnd",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node",
+      "runtimeArgs": ["--respawn"],
+      "args": ["${workspaceFolder}/src/index.ts"]
+    }
+  ]
+}

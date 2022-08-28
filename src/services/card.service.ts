@@ -26,11 +26,10 @@ export class CardService {
     if (!column) {
       throw new Error('Column not found');
     }
+
     if (!payload.parentId) {
       if (!payload.previousElementId) {
-        if (Array.isArray(column.children)) {
-          column.children.push(newCard);
-        }
+        column.children.push(newCard);
       }
     }
     await column.save();

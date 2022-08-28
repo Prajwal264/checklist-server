@@ -3,15 +3,15 @@ import { inject } from 'inversify';
 import {
   controller, httpDelete, httpPost, interfaces, request, response,
 } from 'inversify-express-utils';
+import { CardService } from '../services/card.service';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import TYPES from '../types';
-import { ColumnService } from '../services/column.service';
 import { RequestWithContext } from '../types/request.type';
 
 @controller('/cards', authMiddleware())
 export class CardController implements interfaces.Controller {
   constructor(
-    @inject(TYPES.ColumnService) private readonly columnService: ColumnService,
+    @inject(TYPES.CardService) private readonly cardService: CardService,
   ) { }
 
   @httpPost('/')
@@ -21,7 +21,7 @@ export class CardController implements interfaces.Controller {
       if (!title) {
         throw Error('Title is mandatory');
       }
-      const card = await this.columnService.create(columnId, {
+      const card = await this.cardService.create(columnId, {
         title,
         description,
       });
@@ -31,11 +31,11 @@ export class CardController implements interfaces.Controller {
     }
   }
 
-  @httpDelete('/:columnId')
+  @httpDelete('/:cardId')
   async delteOne(@request() req: RequestWithContext, @response() res: Response) {
     try {
       const { cardId } = req.params;
-      await this.columnService.delete(cardId);
+      await this.cardService.delete(cardId);
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(400).json({ error: error.message });
