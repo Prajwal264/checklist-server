@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { inject } from 'inversify';
 import {
-  controller, httpGet, httpPost, interfaces, request, response,
+  controller, httpDelete, httpGet, httpPost, interfaces, request, response,
 } from 'inversify-express-utils';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import TYPES from '../types';
@@ -37,6 +37,17 @@ export class ColumnController implements interfaces.Controller {
         description,
       });
       res.status(201).json(column);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  @httpDelete('/:columnId')
+  async delteOne(@request() req: RequestWithContext, @response() res: Response) {
+    try {
+      const { columnId } = req.params;
+      await this.columnService.delete(columnId);
+      res.status(200).json({ success: true });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

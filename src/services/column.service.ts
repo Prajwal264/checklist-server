@@ -18,7 +18,15 @@ export class ColumnService {
     }).save();
   }
 
+  fetchOne(findQuery: FilterQuery<IColumn>) {
+    return Column.findOne(findQuery);
+  }
+
   fetchAll(findQuery: FilterQuery<IColumn>) {
     return Column.find(findQuery);
+  }
+
+  delete(columnId: string) {
+    return Column.deleteOne({ columnId });
   }
 }
