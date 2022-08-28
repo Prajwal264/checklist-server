@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { inject } from 'inversify';
 import {
-  controller, httpDelete, httpPost, interfaces, request, response,
+  controller, httpPatch, httpPost, interfaces, request, response,
 } from 'inversify-express-utils';
 import { CardService } from '../services/card.service';
 import { authMiddleware } from '../middlewares/auth.middleware';
@@ -31,12 +31,17 @@ export class CardController implements interfaces.Controller {
     }
   }
 
-  @httpDelete('/:cardId')
-  async delteOne(@request() req: RequestWithContext, @response() res: Response) {
+  @httpPatch('/:cardId')
+  async updateOne(@request() req: RequestWithContext, @response() res: Response) {
     try {
       const { cardId } = req.params;
-      await this.cardService.delete(cardId);
-      res.status(200).json({ success: true });
+      const columnId = req.query.columnId as string;
+      const { title, checked } = req.body;
+      const updatedCard = await this.cardService.update({ cardId, columnId }, {
+        title,
+        checked,
+      });
+      res.status(200).json(updatedCard);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

@@ -1,11 +1,12 @@
 import { model, Schema } from 'mongoose';
+import type { ICard } from '../services/card.service';
 
 export interface IColumn {
   title: string;
   description?: string;
   boardId: string;
   columnId: string;
-  children: [], // why am i jugading
+  children: ICard[]; // why am i jugading
 }
 
 const columnsSchema = new Schema({
@@ -24,4 +25,4 @@ const columnsSchema = new Schema({
   children: [],
 }, { timestamps: true });
 
-export const Column = model('Column', columnsSchema);
+export const Column = model<IColumn>('Column', columnsSchema);

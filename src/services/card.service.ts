@@ -1,8 +1,14 @@
+/* eslint-disable no-param-reassign */
 import { inject, injectable } from 'inversify';
 import { generate } from 'shortid';
 import TYPES from '../types';
-import { Column } from '../models/column.model';
 import { ColumnService } from './column.service';
+
+export interface ICard {
+  title: string;
+  checked: boolean;
+  cardId: string;
+}
 
 @injectable()
 export class CardService {
@@ -37,7 +43,32 @@ export class CardService {
     return newCard;
   }
 
-  delete(columnId: string) {
-    return Column.deleteOne({ columnId });
+  async update({
+    cardId,
+    columnId,
+  }: {
+    cardId: string,
+    columnId: string
+  }, updateParams: Partial<ICard>) {
+    const column = await this.columnService.fetchOne({ columnId });
+    if (!column) {
+      throw new Error('No Column found for the columnId');
+    }
+    column.children.forEach((child) => {
+      if (child.cardId === cardId) {
+        if (updateParams.title !== undefined) {
+          child.title = updateParams.title;
+        }
+        if (updateParams.checked !== undefined) {
+          child.checked = updateParams.checked;
+        }
+      }
+    });
+    column.markModified('children');
+    await column.save();
+    return {
+      cardId,
+      ...updateParams,
+    };
   }
 }
