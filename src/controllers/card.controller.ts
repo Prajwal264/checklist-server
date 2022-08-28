@@ -16,14 +16,14 @@ export class CardController implements interfaces.Controller {
 
   @httpPost('/')
   async create(@request() req: RequestWithContext, @response() res: Response) {
-    const { title, description, columnId } = req.body;
+    const { title, checked, columnId } = req.body;
     try {
       if (!title) {
         throw Error('Title is mandatory');
       }
       const card = await this.cardService.create(columnId, {
         title,
-        description,
+        checked,
       });
       res.status(201).json(card);
     } catch (error) {

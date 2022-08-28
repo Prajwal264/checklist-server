@@ -14,14 +14,15 @@ export class CardService {
     parentId?: string;
     previousElementId?: string;
     title: string
-    description?: string
+    checked: boolean
   }) {
     const cardId = `cardId_${generate()}`;
     const column = await this.columnService.fetchOne({ columnId });
     const newCard = {
+      type: 'Card',
       cardId,
       title: payload.title,
-      description: payload.description,
+      checked: payload.checked,
     };
     if (!column) {
       throw new Error('Column not found');
