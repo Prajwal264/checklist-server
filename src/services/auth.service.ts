@@ -70,7 +70,7 @@ export class AuthService {
     }
     const accessToken = createAccessToken({
       userId: user.userId,
-    }, '10s');
+    }, '1hr');
     const refreshToken = createRefreshToken({
       userId: user.userId,
     }, '7d');
@@ -90,7 +90,7 @@ export class AuthService {
     if (!validToken) {
       return null;
     }
-    return createAccessToken({ userId }, '10s');
+    return createAccessToken({ userId }, '1hr');
   }
 
   private updateUser(userId: string, updatedUser: Partial<IUser>) {
