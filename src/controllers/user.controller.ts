@@ -63,7 +63,9 @@ export class AuthController implements interfaces.Controller {
         email,
         password,
       });
-      res.cookie('accessToken', verifiedResponse.accessToken);
+      res.cookie('accessToken', verifiedResponse.accessToken, {
+        maxAge: 24 * 60 * 60 * 1000,
+      });
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -84,7 +86,9 @@ export class AuthController implements interfaces.Controller {
       }
       const accessToken = await this.authService.refresh(decodedToken.userId);
 
-      res.cookie('accessToken', accessToken);
+      res.cookie('accessToken', accessToken, {
+        maxAge: 24 * 60 * 60 * 1000,
+      });
       res.status(200).send({ success: true });
     } catch (error) {
       res.status(400).send({ error: error.message });
