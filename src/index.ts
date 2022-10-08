@@ -6,6 +6,10 @@ import mongoose from 'mongoose';
 import container from './inversify.cofig';
 import './controllers/index.controller';
 
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 /**
  *
  *
@@ -83,7 +87,7 @@ class Server {
     app.use(express.json());
     app.use(cors({
       credentials: true,
-      origin: 'http://localhost:8080',
+      origin: process.env.CLIENT_ORIGIN,
     }));
     const server = new InversifyExpressServer(container, null, { rootPath: '/api' }, app);
     this.app = server.build();
