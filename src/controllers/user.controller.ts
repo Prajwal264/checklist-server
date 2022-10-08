@@ -66,7 +66,7 @@ export class AuthController implements interfaces.Controller {
       res.cookie('accessToken', verifiedResponse.accessToken, {
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.status(200).json({ success: true });
+      res.status(200).json({ accessToken: verifiedResponse.accessToken });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -85,11 +85,10 @@ export class AuthController implements interfaces.Controller {
         throw new Error('Invalid access token');
       }
       const accessToken = await this.authService.refresh(decodedToken.userId);
-
       res.cookie('accessToken', accessToken, {
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.status(200).send({ success: true });
+      res.status(200).send({ accessToken });
     } catch (error) {
       res.status(400).send({ error: error.message });
     }
