@@ -5,6 +5,7 @@ export interface IColumn {
   title: string;
   description?: string;
   boardId: string;
+  expanded?: boolean;
   columnId: string;
   children: ICard[]; // why am i jugading
 }
@@ -15,6 +16,9 @@ const columnsSchema = new Schema({
   },
   description: {
     type: 'String',
+  },
+  expanded: {
+    type: 'Boolean', default: true,
   },
   boardId: {
     type: 'String', required: true, index: true,

@@ -18,6 +18,12 @@ export class ColumnService {
     }).save();
   }
 
+  update(columnId: string, payload: Partial<IColumn>) {
+    return Column.findOneAndUpdate({
+      columnId,
+    }, payload, { new: true });
+  }
+
   fetchOne(findQuery: FilterQuery<IColumn>) {
     return Column.findOne(findQuery);
   }

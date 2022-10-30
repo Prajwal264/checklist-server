@@ -1,12 +1,13 @@
 import { Response } from 'express';
 import { inject } from 'inversify';
 import {
-  controller, httpDelete, httpGet, httpPost, interfaces, request, response,
+  controller, httpDelete, httpGet, httpPatch, httpPost, interfaces, request, response,
 } from 'inversify-express-utils';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import TYPES from '../types';
 import { ColumnService } from '../services/column.service';
 import { RequestWithContext } from '../types/request.type';
+import { IColumn } from '../models/column.model';
 
 @controller('/columns', authMiddleware())
 export class ColumnController implements interfaces.Controller {
@@ -37,6 +38,18 @@ export class ColumnController implements interfaces.Controller {
         description,
       });
       res.status(201).json(column);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  @httpPatch('/:columnId')
+  async update(@request() req: RequestWithContext, @response() res: Response) {
+    const { columnId } = req.params;
+    const payload = req.body as Partial<IColumn>;
+    try {
+      const column = await this.columnService.update(columnId, payload);
+      res.status(200).json(column);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
