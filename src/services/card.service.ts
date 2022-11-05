@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import { inject, injectable } from 'inversify';
-// import { FilterQuery } from 'mongoose';
 import { generate } from 'shortid';
 import TYPES from '../types';
 import { ColumnService } from './column.service';
@@ -119,5 +118,22 @@ export class CardService {
       await destinationParent.save();
     }
     await sourceParent.save();
+  }
+
+  async deleteOne(cardId: string, columnId: string) {
+    const column = await this.columnService.fetchOne({
+      columnId,
+    });
+    if (!column) {
+      throw new Error(`Column with columnId: ${columnId} isn't found`);
+    }
+    column.children.forEach((card, index) => {
+      if (card.cardId === cardId) {
+        column.children.splice(index, 1);
+      }
+    });
+    column.markModified('children');
+    column.save();
+    return true;
   }
 }
