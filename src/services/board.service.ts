@@ -19,4 +19,8 @@ export class BoardService {
   fetchAll(findQuery: FilterQuery<IBoard>) {
     return Board.find(findQuery);
   }
+
+  deleteOne(findQuery: FilterQuery<IBoard>) {
+    return Board.deleteOne(findQuery);
+  }
 }

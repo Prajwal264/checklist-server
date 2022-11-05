@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "start": "npm run dev",
-    "dev": "nodemon dist",
+    "dev": "nodemon --inspect dist",
     "watch": "tsc -w",
     "build": "tsc --build tsconfig.json",
     "prepare": "husky install",
