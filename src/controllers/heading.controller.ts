@@ -1,4 +1,3 @@
-
 import { Response } from 'express';
 import { inject } from 'inversify';
 import {
@@ -22,10 +21,10 @@ export class HeadingController implements interfaces.Controller {
       if (!title) {
         throw Error('Title is mandatory');
       }
-      const card = await this.headingService.create(columnId, {
+      const heading = await this.headingService.create(columnId, {
         title,
       });
-      res.status(201).json(card);
+      res.status(201).json(heading);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

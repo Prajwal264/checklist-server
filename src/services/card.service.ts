@@ -16,6 +16,7 @@ export interface IMoveCardPayload {
   destinationParent: string;
   referenceNodeId: string;
   isDroppedAbove: boolean;
+  parentHeadingId?: string;
 }
 
 @injectable()
@@ -110,16 +111,16 @@ export class CardService {
       throw new Error('Source Parent not found');
     }
     const itemToBeMoved = sourceParent?.children
-      .find((child) => child.cardId === payload.cardId);
+      .find((child) => 'cardId' in child && child.cardId === payload.cardId);
     if (!itemToBeMoved) {
       throw new Error('Card not found');
     }
 
     sourceParent.children = sourceParent.children
-      .filter((child) => child.cardId !== payload.cardId);
+      .filter((child) => 'cardId' in child && child.cardId !== payload.cardId);
     if (payload.sourceParentId === payload.destinationParent) {
       let indexForMovement = sourceParent.children
-        .findIndex((item) => item.cardId === payload.referenceNodeId);
+        .findIndex((item) => 'cardId' in item && item.cardId === payload.referenceNodeId);
       indexForMovement = payload.isDroppedAbove ? indexForMovement : indexForMovement + 1;
       sourceParent.children.splice(indexForMovement, 0, itemToBeMoved);
     } else {
@@ -127,7 +128,7 @@ export class CardService {
         throw new Error('Destination parent not found');
       }
       let indexForMovement = destinationParent.children
-        .findIndex((item) => item.cardId === payload.referenceNodeId);
+        .findIndex((item) => 'cardId' in item && item.cardId === payload.referenceNodeId);
       indexForMovement = payload.isDroppedAbove ? indexForMovement : indexForMovement + 1;
       destinationParent.children.splice(indexForMovement, 0, itemToBeMoved);
       await destinationParent.save();
@@ -142,9 +143,17 @@ export class CardService {
     if (!column) {
       throw new Error(`Column with columnId: ${columnId} isn't found`);
     }
-    column.children.forEach((card, index) => {
-      if (card.cardId === cardId) {
-        column.children.splice(index, 1);
+    column.children.forEach((item, index) => {
+      if ('cardId' in item) {
+        if (item.cardId === cardId) {
+          column.children.splice(index, 1);
+        }
+      } else {
+        item.children.forEach((child, indexj) => {
+          if (child.cardId === cardId) {
+            item.children.splice(indexj, 1);
+          }
+        });
       }
     });
     column.markModified('children');
