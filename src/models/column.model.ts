@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import { IHeading } from '../services/heading.service';
 import type { ICard } from '../services/card.service';
 
 export interface IColumn {
@@ -7,7 +8,7 @@ export interface IColumn {
   boardId: string;
   expanded?: boolean;
   columnId: string;
-  children: ICard[]; // why am i jugading
+  children: Array<ICard | IHeading>; // why am i jugading
 }
 
 const columnsSchema = new Schema({

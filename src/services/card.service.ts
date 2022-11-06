@@ -26,14 +26,12 @@ export class CardService {
 
   async create(columnId: string, payload: {
     parentId?: string;
-    previousElementId?: string;
     title: string
     checked: boolean
   }) {
     const cardId = `cardId_${generate()}`;
     const column = await this.columnService.fetchOne({ columnId });
     const newCard = {
-      type: 'Card',
       cardId,
       title: payload.title,
       checked: payload.checked,
@@ -43,9 +41,15 @@ export class CardService {
     }
 
     if (!payload.parentId) {
-      if (!payload.previousElementId) {
-        column.children.push(newCard);
-      }
+      column.children.push(newCard);
+    } else {
+      column.children.forEach((child) => {
+        if ('headingId' in child) {
+          if (payload.parentId === child.headingId) {
+            child.children.push(newCard);
+          }
+        }
+      });
     }
     await column.save();
     return newCard;
@@ -62,14 +66,25 @@ export class CardService {
     if (!column) {
       throw new Error('No Column found for the columnId');
     }
+
+    const updateCard = (card: ICard) => {
+      if (updateParams.title !== undefined) {
+        card.title = updateParams.title;
+      }
+      if (updateParams.checked !== undefined) {
+        card.checked = updateParams.checked;
+      }
+    };
+
     column.children.forEach((child) => {
-      if (child.cardId === cardId) {
-        if (updateParams.title !== undefined) {
-          child.title = updateParams.title;
+      if ('cardId' in child) {
+        if (child.cardId === cardId) {
+          updateCard(child);
         }
-        if (updateParams.checked !== undefined) {
-          child.checked = updateParams.checked;
-        }
+      } else {
+        child.children.forEach((card) => {
+          updateCard(card);
+        });
       }
     });
     column.markModified('children');
